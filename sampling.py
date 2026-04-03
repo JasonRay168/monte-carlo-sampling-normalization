@@ -6,7 +6,6 @@ from tqdm import tqdm
 from generate import generate_table
 from functional_dependencies import *
 
-
 def sample_table_fix_prob(table, probability=0.5):
     sample = []
     for row in table:
@@ -97,11 +96,10 @@ if __name__ == "__main__":
 
         start = time.time()
 
-        # fdsample_size = create_samples_fix_size(table_5, "5", sample_size=15, num_samples=10000)
-        # fdsample_prob = create_samples_fix_prob(table_5, "5", probability=0.2, num_samples=10000)
-
-        fdsample_size = create_samples_fix_size(table_8, "8", sample_size=20, num_samples=10000)
-        fdsample_prob = create_samples_fix_prob(table_8, "8", probability=0.02, num_samples=10000)
+        sample_sizes = [20, 40, 60]
+        for size in sample_sizes:
+            for i in range(3):  # Create 3 sets for each size
+                fdsample_size = create_samples_fix_size(table_7, "7", sample_size=size, num_samples=10000)
 
         elapsed = time.time() - start
         print(f"Time elapsed: {elapsed:.4f} seconds")
