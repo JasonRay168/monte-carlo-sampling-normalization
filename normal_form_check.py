@@ -97,18 +97,17 @@ def _analyze_file_group(file_paths, attribute_universe):
 	return results
 
 
-def analyze_sample_files_normal_forms(input_pattern="sample_*.json"):
+def analyze_sample_files_normal_forms(files):
 	"""
 	Read every sample_*.json file, group by sample type (stripping trailing _<N>),
 	classify each FD set by highest normal form, and write one JSON per group.
 	"""
-	matched_files = sorted(glob.glob(input_pattern))
-	if not matched_files:
-		raise FileNotFoundError(f"No files matched pattern: {input_pattern}")
+	if not files:
+		raise ValueError("No input files provided.")
 
 	# Group files by their base type name
 	groups = defaultdict(list)
-	for file_path in matched_files:
+	for file_path in files:
 		groups[_sample_type(file_path)].append(file_path)
 
 	all_results = {}
@@ -127,7 +126,8 @@ def analyze_sample_files_normal_forms(input_pattern="sample_*.json"):
 
 
 if __name__ == "__main__":
-	all_results = analyze_sample_files_normal_forms()
+	input_files = sys.argv[1:]
+	all_results = analyze_sample_files_normal_forms(input_files)
 	for sample_type, results in all_results.items():
 		print(f"\n{sample_type}:")
 		print(json.dumps(results["total"], indent=2))
