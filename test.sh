@@ -8,7 +8,7 @@ shopt -s nullglob
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
-DEFAULT_TABLES=(4 5 6 7 8 9 10)
+DEFAULT_TABLES=(4 5 6 7 8 9 10 11 12 13)
 MAX_JOBS=$(sysctl -n hw.logicalcpu) #use number of CPU cores by default
 SHOW_DASHBOARD=1
 declare -a SAMPLE_NUM_FDS=()

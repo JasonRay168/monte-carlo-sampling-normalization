@@ -1,0 +1,37 @@
+{
+  "files_processed": [
+    "sample_table_6_size_19_set_10000_1.json",
+    "sample_table_6_size_19_set_10000_2.json",
+    "sample_table_6_size_19_set_10000_3.json"
+  ],
+  "per_file": {
+    "sample_table_6_size_19_set_10000_1.json": {
+      "BCNF": 1539,
+      "3NF": 7012,
+      "2NF": 46,
+      "below_2NF": 1403,
+      "fd_sets_processed": 10000
+    },
+    "sample_table_6_size_19_set_10000_2.json": {
+      "BCNF": 1576,
+      "3NF": 7001,
+      "2NF": 52,
+      "below_2NF": 1371,
+      "fd_sets_processed": 10000
+    },
+    "sample_table_6_size_19_set_10000_3.json": {
+      "BCNF": 1541,
+      "3NF": 7096,
+      "2NF": 40,
+      "below_2NF": 1323,
+      "fd_sets_processed": 10000
+    }
+  },
+  "total": {
+    "BCNF": 4656,
+    "3NF": 21109,
+    "2NF": 138,
+    "below_2NF": 4097,
+    "fd_sets_processed": 30000
+  }
+}

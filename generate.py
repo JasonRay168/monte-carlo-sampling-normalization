@@ -18,7 +18,7 @@ def generate_table(n):
 
 def store_table():
     tables = {}
-    for i in range(3, 10):
+    for i in range(3, 13):
         table_num = i + 1
         table = generate_table(table_num)
         print(f"Count of rows in table_{table_num}:", len(table))

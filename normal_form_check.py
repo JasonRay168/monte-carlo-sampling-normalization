@@ -10,9 +10,16 @@ from tqdm import tqdm
 from dbis_functional_dependencies import fds, fdcheck
 
 
-def _concat_attributes(attrs):
-    """Concatenate mapped attribute symbols (e.g. ['0','2'] -> '02')."""
-    return "".join(str(a) for a in attrs)
+def _idx_to_char(idx):
+    """Map attribute index to a single character (0-9 -> '0'-'9', 10+ -> 'a'-'z')."""
+    if idx < 10:
+        return str(idx)
+    return chr(ord('a') + idx - 10)
+
+
+def _attr_str_to_char(attr_str):
+    """Map an attribute name string (as stored in JSON) to its single-char label."""
+    return _idx_to_char(int(attr_str))
 
 
 def _attribute_universe_from_filename(file_path):
@@ -25,7 +32,7 @@ def _attribute_universe_from_filename(file_path):
         )
 
     num_attrs = int(match.group(1))
-    return "".join(str(i) for i in range(num_attrs))
+    return "".join(_idx_to_char(i) for i in range(num_attrs))
 
 
 def _fdset_from_json_entry(fd_entry, attribute_universe):
@@ -33,8 +40,8 @@ def _fdset_from_json_entry(fd_entry, attribute_universe):
     fdset = fdcheck.FunctionalDependencySet(attribute_universe)
 
     for lhs, rhs in fd_entry:
-        lhs_str = _concat_attributes(lhs)
-        rhs_str = _concat_attributes(rhs)
+        lhs_str = "".join(_attr_str_to_char(a) for a in lhs)
+        rhs_str = "".join(_attr_str_to_char(a) for a in rhs)
         fdset.add_dependency(lhs_str, rhs_str)
 
     return fdset

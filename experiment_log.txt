@@ -1,0 +1,60 @@
+=== Phase 0: Generate tables ===
+Count of rows in table_4: 28
+Count of rows in table_5: 75
+Count of rows in table_6: 186
+Count of rows in table_7: 441
+Count of rows in table_8: 1016
+Count of rows in table_9: 2295
+Count of rows in table_10: 5110
+Count of rows in table_11: 11253
+Count of rows in table_12: 24564
+Count of rows in table_13: 53235
+=== Phase 1: Sampling (30 configs, 4 parallel) ===
+run_all.sh:70: nice(5) failed: operation not permitted
+run_all.sh:70: nice(5) failed: operation not permitted
+run_all.sh:70: nice(5) failed: operation not permitted
+run_all.sh:70: nice(5) failed: operation not permitted
+  [1/30] table=4 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [2/30] table=5 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [3/30] table=6 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [4/30] table=7 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [5/30] table=8 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [6/30] table=9 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [7/30] table=10 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [8/30] table=7 nf=5 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [9/30] table=7 nf=10 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [10/30] table=11 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [11/30] table=12 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [12/30] table=7 nf=40 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [13/30] table=7 nf=60 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [14/30] table=13 nf=20 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [15/30] table=7 nf=80 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [16/30] table=5 nf=4 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [17/30] table=6 nf=9 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [18/30] table=7 nf=22 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [19/30] table=7 nf=100 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [20/30] table=5 nf=8 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [21/30] table=6 nf=19 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [22/30] table=8 nf=51 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [23/30] table=7 nf=44 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [24/30] table=5 nf=15 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [25/30] table=6 nf=37 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [26/30] table=7 nf=150 done          run_all.sh:70: nice(5) failed: operation not permitted
+  [27/30] table=7 nf=88 done            [28/30] table=8 nf=102 done            [29/30] table=7 nf=200 done            [30/30] table=8 nf=203 done          
+=== Phase 2: Normal form checking (10 tables) ===
+run_all.sh:107: nice(5) failed: operation not permitted
+run_all.sh:107: nice(5) failed: operation not permitted
+run_all.sh:107: nice(5) failed: operation not permitted
+run_all.sh:107: nice(5) failed: operation not permitted
+  [1/10] table=4 (3 files) done          run_all.sh:107: nice(5) failed: operation not permitted
+  [2/10] table=5 (12 files) done          run_all.sh:107: nice(5) failed: operation not permitted
+  [3/10] table=6 (12 files) done          run_all.sh:107: nice(5) failed: operation not permitted
+  [4/10] table=9 (3 files) done          run_all.sh:107: nice(5) failed: operation not permitted
+  [5/10] table=8 (12 files) done          run_all.sh:107: nice(5) failed: operation not permitted
+  [6/10] table=10 (3 files) done          run_all.sh:107: nice(5) failed: operation not permitted
+  [7/10] table=7 (36 files) done            [8/10] table=11 (3 files) done            [9/10] table=12 (3 files) done            [10/10] table=13 (3 files) done          
+=== Phase 3: Collate ===
+Written: /Users/0c34n/Downloads/cs4221/monte-carlo-sampling-normalization/collated_results.csv
+
+All done. Results: collated_results.csv
+Logs: /var/folders/mv/p15chp514ndc906gf6kdk58w0000gs/T//mc-all.ZriVr2
