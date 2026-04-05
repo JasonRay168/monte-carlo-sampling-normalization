@@ -1,3 +1,5 @@
 .venv/
 *.json
 __pycache__/
+.tool-versions
+.DS_Store

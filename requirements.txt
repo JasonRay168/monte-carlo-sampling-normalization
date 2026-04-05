@@ -1,0 +1,3 @@
+functional-dependencies==1.3.0
+tqdm==4.67.3
+dbis-functional-dependencies==1.0.2
