@@ -3,3 +3,4 @@
 __pycache__/
 .tool-versions
 .DS_Store
+collated_results.csv

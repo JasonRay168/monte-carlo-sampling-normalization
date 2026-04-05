@@ -308,4 +308,4 @@ echo
 echo "All stages completed successfully."
 echo "Dashboard logs: $LOG_DIR"
 
-bash collate.sh
+python3 collate.py
