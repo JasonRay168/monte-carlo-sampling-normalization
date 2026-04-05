@@ -22,7 +22,7 @@ python3 generate.py
 2. Sample Tables
 
 ```bash
-python3 sampling.py <table_num>
+python3 sampling.py <table_num> [--num-fds <N1> <N2> ...]
 ```
 
 3. Check Normal Forms
@@ -36,7 +36,7 @@ python3 normal_form_check.py <list_of_files...>
 Run the whole workflow with one Bash script. It generates the tables, runs sampling per table in parallel, then runs the normal-form checks in parallel while showing a live dashboard.
 
 ```bash
-bash test.sh --jobs <NUM_PARALLEL> [TABLES]
+bash test.sh --jobs <NUM_PARALLEL> [--num-fds <N>]... [TABLES]
 ```
 
 By default, the script processes tables 4 through 10. You can pass a subset and control the parallelism:

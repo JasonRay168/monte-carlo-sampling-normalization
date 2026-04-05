@@ -129,9 +129,25 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("table", type=int, help="Table number e.g. 7 for table_7")
+    parser.add_argument(
+        "--num-fds",
+        type=int,
+        nargs="+",
+        default=None,
+        help="One or more FD sample sizes (default: run 20, 40, and 60)",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Optional random seed for reproducible sampling",
+    )
     args = parser.parse_args()
 
     table_number = args.table
+
+    if args.seed is not None:
+        random.seed(args.seed)
 
     print(f"tables.json already exists. Loading table {table_number}...")
 
@@ -140,7 +156,14 @@ if __name__ == "__main__":
 
     start = time.time()
 
-    sample_sizes = [20, 40, 60]
+    sample_sizes = args.num_fds if args.num_fds is not None else [20, 40, 60]
+    if any(size <= 0 for size in sample_sizes):
+        parser.error("--num-fds values must be positive integers")
+
+    print(f"FD sample sizes: {sample_sizes}")
+    if args.seed is not None:
+        print(f"Sampling seed: {args.seed}")
+
     for size in sample_sizes:
         for i in range(3):  # Create 3 sets for each size
             fdsample_size = create_samples_fix_size(

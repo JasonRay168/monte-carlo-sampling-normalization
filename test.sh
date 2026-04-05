@@ -11,6 +11,7 @@ cd "$ROOT_DIR"
 DEFAULT_TABLES=(4 5 6 7 8 9 10)
 MAX_JOBS=$(sysctl -n hw.logicalcpu) #use number of CPU cores by default
 SHOW_DASHBOARD=1
+declare -a SAMPLE_NUM_FDS=()
 TABLES=()
 
 usage() {
@@ -19,6 +20,7 @@ Usage: bash test.sh [options] [table ...]
 
 Options:
   -j, --jobs N        Maximum number of parallel jobs (default: number of CPU cores)
+  --num-fds N         FD sample size to include (repeatable, default: sampling.py default)
   --no-dashboard      Disable the live terminal dashboard
   -h, --help          Show this help message
 
@@ -40,6 +42,14 @@ while [ "$#" -gt 0 ]; do
         exit 1
       fi
       MAX_JOBS="$2"
+      shift 2
+      ;;
+    --num-fds)
+      if [ "$#" -lt 2 ]; then
+        echo "Missing value for $1" >&2
+        exit 1
+      fi
+      SAMPLE_NUM_FDS+=("$2")
       shift 2
       ;;
     --no-dashboard)
@@ -77,6 +87,13 @@ if ! is_number "$MAX_JOBS" || [ "$MAX_JOBS" -lt 1 ]; then
   echo "--jobs must be a positive integer" >&2
   exit 1
 fi
+
+for n in "${SAMPLE_NUM_FDS[@]}"; do
+  if ! is_number "$n" || [ "$n" -lt 1 ]; then
+    echo "--num-fds values must be positive integers" >&2
+    exit 1
+  fi
+done
 
 for table in "${TABLES[@]}"; do
   if ! is_number "$table"; then
@@ -194,7 +211,11 @@ start_sampling() {
   SAMPLE_STATUS[$idx]="running"
   (
     printf '[table %s] sampling started at %s\n' "$table" "$(date '+%H:%M:%S')"
-    python3 sampling.py "$table"
+    if [ "${#SAMPLE_NUM_FDS[@]}" -gt 0 ]; then
+      python3 sampling.py "$table" --num-fds "${SAMPLE_NUM_FDS[@]}"
+    else
+      python3 sampling.py "$table"
+    fi
     printf '[table %s] sampling finished at %s\n' "$table" "$(date '+%H:%M:%S')"
   ) >"$log_file" 2>&1 &
   SAMPLE_PID[$idx]="$!"
