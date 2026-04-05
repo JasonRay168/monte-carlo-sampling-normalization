@@ -9,7 +9,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
 DEFAULT_TABLES=(4 5 6 7 8 9 10)
-MAX_JOBS=3
+MAX_JOBS=$(sysctl -n hw.logicalcpu) #use number of CPU cores by default
 SHOW_DASHBOARD=1
 TABLES=()
 
@@ -18,7 +18,7 @@ usage() {
 Usage: bash test.sh [options] [table ...]
 
 Options:
-  -j, --jobs N        Maximum number of parallel jobs (default: 3)
+  -j, --jobs N        Maximum number of parallel jobs (default: number of CPU cores)
   --no-dashboard      Disable the live terminal dashboard
   -h, --help          Show this help message
 
