@@ -49,7 +49,9 @@ The runner also writes a collated CSV summary at the end of the flow.
 
 ## CSV Collation
 
-Generate the CSV summary directly from the existing sample and normal-form output files:
+Generate the CSV summary directly from the existing sample and normal-form output files
+
+**NOTE:** Uses all result json files, remember to delete when you change the run
 
 ```bash
 bash collate.sh
