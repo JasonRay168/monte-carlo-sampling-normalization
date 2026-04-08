@@ -87,13 +87,15 @@ This writes:
 - `analysis_results.csv`
 - `trend_report.txt`
 
+It also writes the cleaned merged rows back into `CS4221 Project Results.xlsx` on a sheet named `Archived Data` so the report data stays in the workbook alongside the original source sheet.
+
 Generate the graphs from the cleaned dataset:
 
 ```bash
 python3 plot_results.py
 ```
 
-This writes SVG graphs into `graphs/`.
+This writes matplotlib-rendered SVG graphs into `graphs/`.
 
 The analysis scripts use these definitions:
 
@@ -104,3 +106,4 @@ The analysis scripts use hardcoded file names and do not take CLI arguments.
 For the report-facing merged dataset and figures, rows with `FD Density > 1` are excluded as oversampling artifacts.
 Partially collated runs with missing normal-form counts are also excluded from the cleaned dataset.
 The combined FD-density figures use one shared linear window up to `0.11` and select representative points nearest a common density ladder for a cleaner report-ready comparison across `n`.
+The current matplotlib plots instead render all cleaned rows, with categorical spacing for attribute-based plots and scatter plots for the density-based figures.

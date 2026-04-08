@@ -7,10 +7,13 @@ from pathlib import Path
 from typing import Dict, Iterable, List
 from zipfile import ZipFile
 
+from openpyxl import Workbook, load_workbook
+
 
 XML_NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 WORKBOOK_PATH = Path("CS4221 Project Results.xlsx")
 REPO_COLLATED_PATH = Path("collated_results.csv")
+ARCHIVE_SHEET_NAME = "Archived Data"
 
 
 def _as_float(value: str) -> float:
@@ -163,6 +166,49 @@ def write_cleaned_csv(rows: Iterable[Dict[str, float | str]], path: Path) -> Non
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def write_archived_workbook(
+    rows: Iterable[Dict[str, float | str]],
+    path: Path = WORKBOOK_PATH,
+    sheet_name: str = ARCHIVE_SHEET_NAME,
+) -> None:
+    headers = [
+        "sample_size",
+        "num_attributes",
+        "num_fds",
+        "fd_density",
+        "minimal_cover_size",
+        "reduction_ratio",
+        "total_fd_sets",
+        "below_2nf_count",
+        "2nf_count",
+        "3nf_count",
+        "bcnf_count",
+        "below_2nf_rate",
+        "2nf_rate",
+        "3nf_rate",
+        "bcnf_rate",
+    ]
+
+    if path.exists():
+        workbook = load_workbook(path)
+    else:
+        workbook = Workbook()
+        workbook.remove(workbook.active)
+
+    if sheet_name in workbook.sheetnames:
+        del workbook[sheet_name]
+
+    worksheet = workbook.create_sheet(title=sheet_name)
+    worksheet.append(headers)
+
+    for row in rows:
+        worksheet.append([row.get(header, "") for header in headers])
+
+    worksheet.freeze_panes = "A2"
+    worksheet.auto_filter.ref = f"A1:O{worksheet.max_row}"
+    workbook.save(path)
 
 
 def group_by_attr(rows: Iterable[Dict[str, float | str]]) -> Dict[int, List[Dict[str, float | str]]]:

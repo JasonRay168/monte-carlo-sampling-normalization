@@ -2,7 +2,12 @@
 
 from pathlib import Path
 
-from results_dataset import group_by_attr, load_all_rows, write_cleaned_csv
+from results_dataset import (
+    group_by_attr,
+    load_all_rows,
+    write_archived_workbook,
+    write_cleaned_csv,
+)
 
 
 CLEANED_CSV_PATH = Path("analysis_results.csv")
@@ -87,6 +92,7 @@ def main() -> int:
         raise SystemExit("No rows found in the hardcoded workbook/CSV sources.")
 
     write_cleaned_csv(rows, CLEANED_CSV_PATH)
+    write_archived_workbook(rows)
     report = build_report(rows)
     REPORT_PATH.write_text(report, encoding="utf-8")
     print(report, end="")
