@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+<rect width="100%" height="100%" fill="#f7f3e8"/>
+<text x="480.0" y="28" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#1f2933">Reduction Ratio vs Number of Attributes</text>
+<line x1="80" y1="470" x2="920" y2="470" stroke="#334e68" stroke-width="2"/>
+<line x1="80" y1="50" x2="80" y2="470" stroke="#334e68" stroke-width="2"/>
+<text x="480.0" y="520" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#1f2933">Number of Attributes</text>
+<text x="24" y="270.0" text-anchor="middle" transform="rotate(-90 24 270.0)" font-family="Helvetica, Arial, sans-serif" font-size="16" fill="#1f2933">Reduction Ratio</text>
+<line x1="80" y1="470.00" x2="920" y2="470.00" stroke="#d9e2ec" stroke-width="1"/>
+<text x="70" y="475.00" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">0.000</text>
+<line x1="80" y1="386.00" x2="920" y2="386.00" stroke="#d9e2ec" stroke-width="1"/>
+<text x="70" y="391.00" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">0.031</text>
+<line x1="80" y1="302.00" x2="920" y2="302.00" stroke="#d9e2ec" stroke-width="1"/>
+<text x="70" y="307.00" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">0.063</text>
+<line x1="80" y1="218.00" x2="920" y2="218.00" stroke="#d9e2ec" stroke-width="1"/>
+<text x="70" y="223.00" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">0.094</text>
+<line x1="80" y1="134.00" x2="920" y2="134.00" stroke="#d9e2ec" stroke-width="1"/>
+<text x="70" y="139.00" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">0.125</text>
+<line x1="80" y1="50.00" x2="920" y2="50.00" stroke="#d9e2ec" stroke-width="1"/>
+<text x="70" y="55.00" text-anchor="end" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">0.156</text>
+<line x1="80.00" y1="50" x2="80.00" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="80.00" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">4</text>
+<line x1="173.33" y1="50" x2="173.33" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="173.33" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">5</text>
+<line x1="266.67" y1="50" x2="266.67" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="266.67" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">6</text>
+<line x1="360.00" y1="50" x2="360.00" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="360.00" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">7</text>
+<line x1="453.33" y1="50" x2="453.33" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="453.33" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">8</text>
+<line x1="546.67" y1="50" x2="546.67" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="546.67" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">9</text>
+<line x1="640.00" y1="50" x2="640.00" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="640.00" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">10</text>
+<line x1="733.33" y1="50" x2="733.33" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="733.33" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">11</text>
+<line x1="826.67" y1="50" x2="826.67" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="826.67" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">12</text>
+<line x1="920.00" y1="50" x2="920.00" y2="470" stroke="#eef2f6" stroke-width="1"/>
+<text x="920.00" y="492" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#486581">13</text>
+<polyline fill="none" stroke="#00798c" stroke-width="3" points="80.00,50.00 173.33,263.94 266.67,360.91 360.00,410.28 453.33,437.90 546.67,453.36 640.00,461.66 733.33,465.91 826.67,468.03 920.00,469.06"/>
+<circle cx="80.00" cy="50.00" r="4" fill="#00798c"/>
+<circle cx="173.33" cy="263.94" r="4" fill="#00798c"/>
+<circle cx="266.67" cy="360.91" r="4" fill="#00798c"/>
+<circle cx="360.00" cy="410.28" r="4" fill="#00798c"/>
+<circle cx="453.33" cy="437.90" r="4" fill="#00798c"/>
+<circle cx="546.67" cy="453.36" r="4" fill="#00798c"/>
+<circle cx="640.00" cy="461.66" r="4" fill="#00798c"/>
+<circle cx="733.33" cy="465.91" r="4" fill="#00798c"/>
+<circle cx="826.67" cy="468.03" r="4" fill="#00798c"/>
+<circle cx="920.00" cy="469.06" r="4" fill="#00798c"/>
+<rect x="90" y="58" width="14" height="14" fill="#00798c"/>
+<text x="112" y="70" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1f2933">sample size = 20</text>
+</svg>

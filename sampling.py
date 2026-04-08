@@ -142,6 +142,18 @@ if __name__ == "__main__":
         default=None,
         help="Optional random seed for reproducible sampling",
     )
+    parser.add_argument(
+        "--num-samples",
+        type=int,
+        default=10000,
+        help="Number of sampled FD sets per generated JSON file (default: 10000)",
+    )
+    parser.add_argument(
+        "--num-sets",
+        type=int,
+        default=3,
+        help="Number of JSON files to generate for each sample size (default: 3)",
+    )
     args = parser.parse_args()
 
     table_number = args.table
@@ -159,18 +171,24 @@ if __name__ == "__main__":
     sample_sizes = args.num_fds if args.num_fds is not None else [20, 40, 60]
     if any(size <= 0 for size in sample_sizes):
         parser.error("--num-fds values must be positive integers")
+    if args.num_samples <= 0:
+        parser.error("--num-samples must be a positive integer")
+    if args.num_sets <= 0:
+        parser.error("--num-sets must be a positive integer")
 
     print(f"FD sample sizes: {sample_sizes}")
     if args.seed is not None:
         print(f"Sampling seed: {args.seed}")
+    print(f"Samples per file: {args.num_samples}")
+    print(f"Files per size: {args.num_sets}")
 
     for size in sample_sizes:
-        for i in range(3):  # Create 3 sets for each size
+        for _ in range(args.num_sets):
             fdsample_size = create_samples_fix_size(
                 data[f"table_{table_number}"],
                 f"{table_number}",
                 sample_size=size,
-                num_samples=10000,
+                num_samples=args.num_samples,
             )
 
     elapsed = time.time() - start
