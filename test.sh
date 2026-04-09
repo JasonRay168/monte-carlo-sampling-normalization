@@ -15,7 +15,7 @@ DENSITY_BASED=1
 DENSITY_MAX=1.0
 DENSITY_STEP=0.05
 FD_CHUNK_SIZE=120
-SIZE_PARALLEL_JOBS=$(sysctl -n hw.logicalcpu)
+SIZE_PARALLEL_JOBS=$MAX_JOBS
 NUM_SAMPLES=10000
 NUM_SETS=3
 RUN_GENERATE=0
@@ -35,7 +35,7 @@ Options:
   --no-full-density   Disable density-based auto-scheduling and fall back to sampling.py defaults
   --density-max X     Maximum FD density for auto-scheduling (default: 1.0)
   --density-step X    Density ladder step for auto-scheduling (default: 0.05)
-  --size-jobs N       Max parallel sampling.py jobs per table across sizes (default: 4)
+  --size-jobs N       Max parallel sampling.py jobs per table across sizes (default: number of CPU cores)
   --num-samples N     Number of sampled FD sets per generated JSON file (default: 10000)
   --num-sets N        Number of JSON files to generate for each FD sample size (default: 3)
   --no-dashboard      Disable the live terminal dashboard
