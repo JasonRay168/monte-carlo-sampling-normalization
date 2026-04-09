@@ -260,8 +260,9 @@ read_full_log() {
   if [ -f "$log_file" ]; then
     # show recent log content with tqdm progress converted to visible lines,
     # then collapse sampling/converting progress to one line per task label.
-    LC_ALL=C tail -c 8192 "$log_file" 2>/dev/null | LC_ALL=C tr '\r' '\n' | \
-      awk '
+    # Use tail -n to get complete lines (not byte-bounded) to avoid truncating long progress bars
+    LC_ALL=C tail -n 1000 "$log_file" 2>/dev/null | LC_ALL=C tr '\r' '\n' | \
+      LC_ALL=C awk '
         {
           if ($0 ~ /^(Sampling table|Converting table) /) {
             key = $0
@@ -274,7 +275,8 @@ read_full_log() {
             next
           }
 
-          if ($0 !~ /^[[:space:]]*$/) {
+          # Keep any non-empty line that is not a progress line
+          if (length($0) > 0) {
             other[++other_count] = $0
           }
         }
