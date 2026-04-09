@@ -68,7 +68,9 @@ def build_report(rows):
     for series in dense_groups:
         start = series[0]
         end = series[-1]
-        lines.append(f"Trend 2: Density sweep for attribute count {start['num_attributes']}")
+        lines.append(
+            f"Trend 2: Density sweep for attribute count {start['num_attributes']}"
+        )
         lines.append(
             f"- FD density increases from {_fmt_float(start['fd_density'])} to {_fmt_float(end['fd_density'])}."
         )

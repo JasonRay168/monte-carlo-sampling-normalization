@@ -54,18 +54,29 @@ def test_conversion():
     print(converted)
 
 
-def create_samples_fix_size(table, table_name, sample_size, num_samples=10000):
+def create_samples_fix_size(
+    table,
+    table_name,
+    sample_size,
+    num_samples=10000,
+    set_index=None,
+    total_sets=None,
+):
     set_num = 1
     while os.path.exists(
         f"sample_table_{table_name}_size_{sample_size}_set_{num_samples}_{set_num}.json"
     ):
         set_num += 1
 
+    set_label = ""
+    if set_index is not None and total_sets is not None:
+        set_label = f" [set {set_index}/{total_sets}]"
+
     samples = [
         sample_table_fix_size(table, sample_size)
         for _ in tqdm(
             range(num_samples),
-            desc=f"Sampling table {table_name} (size={sample_size})",
+            desc=f"Sampling table {table_name} (size={sample_size}){set_label}",
             unit="sample",
         )
     ]
@@ -73,7 +84,7 @@ def create_samples_fix_size(table, table_name, sample_size, num_samples=10000):
         convert_sample(sample)
         for sample in tqdm(
             samples,
-            desc=f"Converting table {table_name} (size={sample_size})",
+            desc=f"Converting table {table_name} (size={sample_size}){set_label}",
             unit="sample",
         )
     ]
@@ -81,6 +92,11 @@ def create_samples_fix_size(table, table_name, sample_size, num_samples=10000):
     filename = (
         f"sample_table_{table_name}_size_{sample_size}_set_{num_samples}_{set_num}.json"
     )
+    if set_index is not None and total_sets is not None:
+        print(f"Writing size {sample_size} set {set_index}/{total_sets} to {filename}")
+    else:
+        print(f"Writing size {sample_size} to {filename}")
+
     json_fdsets = [fd_set_to_json(fdset) for fdset in fdsets]
     with open(filename, "w") as f:
         json.dump(json_fdsets, f)
@@ -183,12 +199,14 @@ if __name__ == "__main__":
     print(f"Files per size: {args.num_sets}")
 
     for size in sample_sizes:
-        for _ in range(args.num_sets):
+        for set_index in range(1, args.num_sets + 1):
             fdsample_size = create_samples_fix_size(
                 data[f"table_{table_number}"],
                 f"{table_number}",
                 sample_size=size,
                 num_samples=args.num_samples,
+                set_index=set_index,
+                total_sets=args.num_sets,
             )
 
     elapsed = time.time() - start

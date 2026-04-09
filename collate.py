@@ -100,7 +100,22 @@ def collate(workspace: Path, output_file: Path) -> None:
             )
         )
 
-    rows = [row for _, _, row in sorted(sortable_rows)]
+    merged_rows = {}
+    for num_attrs, sample_size, row in sortable_rows:
+        key = (num_attrs, sample_size)
+        if key not in merged_rows:
+            merged_rows[key] = row
+            continue
+
+        current = merged_rows[key]
+        current_1nf = int(current["1NF"]) if str(current["1NF"]).isdigit() else -1
+        new_1nf = int(row["1NF"]) if str(row["1NF"]).isdigit() else -1
+
+        # Prefer the row with more processed FD sets when duplicate keys exist.
+        if new_1nf > current_1nf:
+            merged_rows[key] = row
+
+    rows = [merged_rows[key] for key in sorted(merged_rows)]
 
     with output_file.open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=FIELDNAMES)
