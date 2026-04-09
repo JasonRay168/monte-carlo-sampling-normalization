@@ -115,7 +115,15 @@ def draw_stacked_bar_chart(path: Path, title: str, rows):
         "bcnf_rate": "BCNF",
     }
 
-    aggregated = defaultdict(lambda: {"below_2nf_count": 0, "2nf_count": 0, "3nf_count": 0, "bcnf_count": 0, "total_fd_sets": 0})
+    aggregated = defaultdict(
+        lambda: {
+            "below_2nf_count": 0,
+            "2nf_count": 0,
+            "3nf_count": 0,
+            "bcnf_count": 0,
+            "total_fd_sets": 0,
+        }
+    )
     for row in rows:
         bucket = aggregated[row["num_attributes"]]
         bucket["below_2nf_count"] += row["below_2nf_count"]

@@ -62,7 +62,9 @@ def load_workbook_rows(path: Path = WORKBOOK_PATH) -> List[Dict[str, float | str
         if "xl/sharedStrings.xml" in workbook_zip.namelist():
             shared_root = ET.fromstring(workbook_zip.read("xl/sharedStrings.xml"))
             for item in shared_root.findall("m:si", XML_NS):
-                text = "".join(node.text or "" for node in item.iterfind(".//m:t", XML_NS))
+                text = "".join(
+                    node.text or "" for node in item.iterfind(".//m:t", XML_NS)
+                )
                 shared_strings.append(text)
 
         sheet_root = ET.fromstring(workbook_zip.read("xl/worksheets/sheet1.xml"))
@@ -100,7 +102,9 @@ def load_workbook_rows(path: Path = WORKBOOK_PATH) -> List[Dict[str, float | str
     return records
 
 
-def load_repo_collated_rows(path: Path = REPO_COLLATED_PATH) -> List[Dict[str, float | str]]:
+def load_repo_collated_rows(
+    path: Path = REPO_COLLATED_PATH,
+) -> List[Dict[str, float | str]]:
     records: List[Dict[str, float | str]] = []
     if not path.exists():
         return records
@@ -140,7 +144,9 @@ def load_all_rows() -> List[Dict[str, float | str]]:
         for row in load_workbook_rows():
             merged[(row["num_attributes"], row["sample_size"])] = row
 
-    return sorted(merged.values(), key=lambda row: (row["num_attributes"], row["sample_size"]))
+    return sorted(
+        merged.values(), key=lambda row: (row["num_attributes"], row["sample_size"])
+    )
 
 
 def write_cleaned_csv(rows: Iterable[Dict[str, float | str]], path: Path) -> None:
@@ -211,7 +217,9 @@ def write_archived_workbook(
     workbook.save(path)
 
 
-def group_by_attr(rows: Iterable[Dict[str, float | str]]) -> Dict[int, List[Dict[str, float | str]]]:
+def group_by_attr(
+    rows: Iterable[Dict[str, float | str]],
+) -> Dict[int, List[Dict[str, float | str]]]:
     groups: Dict[int, List[Dict[str, float | str]]] = defaultdict(list)
     for row in rows:
         groups[row["num_attributes"]].append(row)

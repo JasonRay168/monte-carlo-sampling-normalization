@@ -39,7 +39,7 @@ Run the whole workflow with one Bash script. It generates the tables, runs sampl
 bash test.sh --jobs <NUM_PARALLEL> [--num-fds <N>]... [TABLES]
 ```
 
-By default, the generator now builds tables 4 through 13. The test runner still defaults to tables 4 through 10. You can pass a subset and control the parallelism:
+By default, the generator now builds tables 4 through 13. The test runner defaults to tables 6 through 13. You can pass a subset and control the parallelism:
 
 ```bash
 bash test.sh --jobs 4 4 5 6
