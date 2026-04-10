@@ -29,10 +29,10 @@ Trend 2: Density sweep for attribute count 7
 - Reduction ratio changes from 0.002222 to 0.019652.
 
 Trend 2: Density sweep for attribute count 8
-- FD density increases from 0.019685 to 0.199803.
-- BCNF rate changes from 0.06% to 82.75%.
-- 3NF rate changes from 95.87% to 12.94%.
-- Reduction ratio changes from 0.011958 to 0.009552.
+- FD density increases from 0.000984 to 1.000000.
+- BCNF rate changes from 37.22% to 100.00%.
+- 3NF rate changes from 62.49% to 0.00%.
+- Reduction ratio changes from 0.000966 to 0.009843.
 
 Trend 2: Density sweep for attribute count 9
 - FD density increases from 0.008715 to 0.043573.

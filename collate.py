@@ -7,6 +7,8 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
+from tqdm import tqdm
+
 
 FIELDNAMES = [
     "Sample Size",
@@ -40,7 +42,12 @@ def collate(workspace: Path, output_file: Path) -> None:
 
     sortable_rows = []
 
-    for base, files in sorted(groups.items()):
+    grouped_items = sorted(groups.items())
+    for base, files in tqdm(
+        grouped_items,
+        desc="Collating sample groups",
+        unit="group",
+    ):
         match = re.search(r"sample_table_(\d+)_size_(\d+)_set_\d+", base)
         if not match:
             continue
