@@ -23,8 +23,16 @@ FIELDNAMES = [
     "BCNF",
 ]
 
+DEFAULT_N_ATTRS_MIN = 4
+DEFAULT_N_ATTRS_MAX = 8
 
-def collate(workspace: Path, output_file: Path) -> None:
+
+def collate(
+    workspace: Path,
+    output_file: Path,
+    n_attrs_min: int = DEFAULT_N_ATTRS_MIN,
+    n_attrs_max: int = DEFAULT_N_ATTRS_MAX,
+) -> None:
     tables_path = workspace / "tables.json"
     if not tables_path.exists():
         raise FileNotFoundError("tables.json not found")
@@ -56,6 +64,10 @@ def collate(workspace: Path, output_file: Path) -> None:
         sample_size = int(match.group(2))
         table_key = f"table_{num_attrs}"
         no_fds = len(tables.get(table_key, []))
+
+        # Inclusive bounds are clearer and less error-prone than range membership.
+        if not (n_attrs_min <= num_attrs <= n_attrs_max):
+            continue
 
         total_fd_sets = 0
         total_min_cover_size = 0
@@ -146,14 +158,40 @@ def main() -> int:
         default=".",
         help="Workspace directory containing tables.json and sample files (default: .)",
     )
+    parser.add_argument(
+        "--n-attrs-min",
+        type=int,
+        default=DEFAULT_N_ATTRS_MIN,
+        help=(
+            "Minimum number of attributes to include (inclusive; "
+            f"default: {DEFAULT_N_ATTRS_MIN})"
+        ),
+    )
+    parser.add_argument(
+        "--n-attrs-max",
+        type=int,
+        default=DEFAULT_N_ATTRS_MAX,
+        help=(
+            "Maximum number of attributes to include (inclusive; "
+            f"default: {DEFAULT_N_ATTRS_MAX})"
+        ),
+    )
     args = parser.parse_args()
+
+    if args.n_attrs_min > args.n_attrs_max:
+        raise ValueError("--n-attrs-min must be <= --n-attrs-max")
 
     workspace = Path(args.workspace).resolve()
     output_file = Path(args.output)
     if not output_file.is_absolute():
         output_file = workspace / output_file
 
-    collate(workspace, output_file)
+    collate(
+        workspace,
+        output_file,
+        n_attrs_min=args.n_attrs_min,
+        n_attrs_max=args.n_attrs_max,
+    )
     print(f"Written: {output_file}")
     return 0
 

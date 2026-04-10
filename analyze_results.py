@@ -12,6 +12,8 @@ from results_dataset import (
 
 CLEANED_CSV_PATH = Path("analysis_results.csv")
 REPORT_PATH = Path("trend_report.txt")
+MIN_NUM_ATTRIBUTES = 4
+MAX_NUM_ATTRIBUTES = 8
 
 
 def _fmt_percent(value: float) -> str:
@@ -89,7 +91,12 @@ def build_report(rows):
 
 
 def main() -> int:
-    rows = [row for row in load_all_rows() if row["fd_density"] <= 1.0]
+    rows = [
+        row
+        for row in load_all_rows()
+        if row["fd_density"] <= 1.0
+        and MIN_NUM_ATTRIBUTES <= row["num_attributes"] <= MAX_NUM_ATTRIBUTES
+    ]
     if not rows:
         raise SystemExit("No rows found in the hardcoded workbook/CSV sources.")
 

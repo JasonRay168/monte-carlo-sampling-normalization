@@ -80,7 +80,7 @@ def draw_grouped_line_chart(path: Path, title: str, y_label: str, rows, y_key: s
         groups[row["num_attributes"]].append(row)
 
     attr_values = sorted(groups)
-    color_map = plt.get_cmap("tab10", len(attr_values))
+    color_map = plt.get_cmap("Set1", len(attr_values))
 
     fig, ax = plt.subplots(figsize=(11.8, 6.4))
 
@@ -240,14 +240,14 @@ def main() -> int:
         "Normal Form Distribution vs Number of Attributes",
         rows,
     )
-    draw_density_scatter(
+    draw_grouped_line_chart(
         OUTPUT_DIR / "fd_density_vs_bcnf_rate.svg",
         "BCNF Rate vs FD Density",
         "BCNF Rate",
         rows,
         "bcnf_rate",
     )
-    draw_density_scatter(
+    draw_grouped_line_chart(
         OUTPUT_DIR / "fd_density_vs_reduction_ratio.svg",
         "Reduction Ratio vs FD Density",
         "Reduction Ratio",

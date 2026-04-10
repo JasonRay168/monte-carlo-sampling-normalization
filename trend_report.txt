@@ -1,8 +1,7 @@
 Trend 1: Attribute growth at fixed sample size 20
-- Minimal cover size rises from 4.380667 at 4 attributes to 18.666500 at 13 attributes.
-- Reduction ratio (minimal cover size / num FDs) falls from 0.156452 to 0.000351, a 446.2x drop.
-- BCNF rate falls from 99.74% to 0 by 9 attributes.
-- 3NF rate climbs from 0.01% to 99.96%.
+- Minimal cover size rises from 4.380667 at 4 attributes to 12.149400 at 8 attributes.
+- Reduction ratio (minimal cover size / num FDs) falls from 0.156452 to 0.011958, a 13.1x drop.
+- 3NF rate climbs from 0.01% to 95.87%.
 
 Trend 2: Density sweep for attribute count 4
 - FD density increases from 0.035714 to 1.000000.
@@ -33,15 +32,3 @@ Trend 2: Density sweep for attribute count 8
 - BCNF rate changes from 37.22% to 100.00%.
 - 3NF rate changes from 62.49% to 0.00%.
 - Reduction ratio changes from 0.000966 to 0.009843.
-
-Trend 2: Density sweep for attribute count 9
-- FD density increases from 0.008715 to 0.043573.
-- BCNF rate changes from 0.00% to 2.27%.
-- 3NF rate changes from 98.23% to 97.28%.
-- Reduction ratio changes from 0.006198 to 0.007692.
-
-Trend 2: Density sweep for attribute count 10
-- FD density increases from 0.003914 to 0.019961.
-- BCNF rate changes from 0.00% to 0.07%.
-- 3NF rate changes from 99.22% to 99.87%.
-- Reduction ratio changes from 0.003109 to 0.005167.
