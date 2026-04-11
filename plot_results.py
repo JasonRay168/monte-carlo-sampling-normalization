@@ -144,8 +144,9 @@ def plot_nf_at_fixed_fds(rows, out: Path):
         actual = stack_rows[0]["sample_size"] if stack_rows else target
         _style(ax, f"NF Distribution at {actual} FDs",
                "Number of Attributes", "Share of FD Sets")
-        ax.set_ylim(0, 1.08)
-        ax.legend(loc="upper right", frameon=False, fontsize=9)
+        ax.set_ylim(0, 1.25)
+        ax.legend(loc="upper center", frameon=False, fontsize=9,
+                  ncol=4, bbox_to_anchor=(0.5, 1.0))
 
     fig.tight_layout()
     _save(fig, out / "nf_at_fixed_fds")
@@ -169,7 +170,14 @@ def plot_bcnf_threshold(rows, out: Path):
     groups = _group_by_attr(rows)
     fig, ax = plt.subplots(figsize=(10, 6.5))
 
-    for target, style, label in [(0.5, "o-", "50% BCNF"), (0.9, "s--", "90% BCNF")]:
+    thresholds = [
+        (0.1, "v:", "#95a5a6", "10% BCNF"),
+        (0.3, "D-.", "#27ae60", "30% BCNF"),
+        (0.5, "o-", "#2c3e50", "50% BCNF"),
+        (0.7, "^-.", "#8e44ad", "70% BCNF"),
+        (0.9, "s--", "#e67e22", "90% BCNF"),
+    ]
+    for target, style, color, label in thresholds:
         xs, ys = [], []
         for n in sorted(groups):
             thresh = _find_threshold(groups[n], target)
@@ -177,7 +185,7 @@ def plot_bcnf_threshold(rows, out: Path):
                 xs.append(n)
                 ys.append(thresh)
         ax.plot(xs, ys, style, linewidth=2.2, markersize=8,
-                color="#2c3e50" if target == 0.5 else "#e67e22", label=label)
+                color=color, label=label)
         for x, y in zip(xs, ys):
             ax.annotate(f"{y:.0f}", (x, y), textcoords="offset points",
                         xytext=(8, 8), fontsize=9, alpha=0.8)
