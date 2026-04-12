@@ -1,6 +1,8 @@
 .venv/
 *.json
+*.eps
+*.png
+*.csv
 __pycache__/
 .tool-versions
 .DS_Store
-collated_results.csv

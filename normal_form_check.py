@@ -1,47 +1,35 @@
 import argparse
 import json
 import re
-import sys
 from collections import defaultdict
 from pathlib import Path
 
 from tqdm import tqdm
 
-from dbis_functional_dependencies import fds, fdcheck
-
-
-def _concat_attributes(attrs):
-    """Concatenate mapped attribute symbols (e.g. ['0','2'] -> '02')."""
-    return "".join(str(a) for a in attrs)
+from dbis_functional_dependencies import fdcheck
 
 
 def _attribute_universe_from_filename(file_path):
-    """Extract attribute universe from filename segment table_<N>."""
     match = re.search(r"table_(\d+)", Path(file_path).name)
     if not match:
-        raise ValueError(
-            f"Could not extract table size from filename: {Path(file_path).name}. "
-            "Expected pattern containing 'table_<N>'."
-        )
+        return
 
     num_attrs = int(match.group(1))
     return "".join(str(i) for i in range(num_attrs))
 
 
 def _fdset_from_json_entry(fd_entry, attribute_universe):
-    """Build a FunctionalDependencySet from one sampled FD set entry."""
     fdset = fdcheck.FunctionalDependencySet(attribute_universe)
 
     for lhs, rhs in fd_entry:
-        lhs_str = _concat_attributes(lhs)
-        rhs_str = _concat_attributes(rhs)
+        lhs_str = "".join(str(a) for a in lhs)
+        rhs_str = "".join(str(a) for a in rhs)
         fdset.add_dependency(lhs_str, rhs_str)
 
     return fdset
 
 
 def _highest_normal_form(fdset):
-    """Classify by highest satisfied normal form for exclusive counting."""
     if fdset.isBCNF():
         return "BCNF"
     if fdset.is3NF():
@@ -52,13 +40,11 @@ def _highest_normal_form(fdset):
 
 
 def _sample_type(file_path):
-    """Return the base type of a sample file by stripping the trailing _<N> set number."""
     stem = Path(file_path).stem  # e.g. sample_table_5_size_10_set_10000_1
     return re.sub(r"_\d+$", "", stem)  # -> sample_table_5_size_10_set_10000
 
 
 def _analyze_file_group(file_paths, attribute_universe):
-    """Analyze a list of files sharing the same sample type and return aggregated counts."""
     results = {
         "files_processed": [Path(p).name for p in file_paths],
         "per_file": {},
@@ -79,7 +65,14 @@ def _analyze_file_group(file_paths, attribute_universe):
         file_name = Path(file_path).name
         for fd_entry in tqdm(fd_sets, desc=f"Analysing {file_name}", unit="set"):
             fdset = _fdset_from_json_entry(fd_entry, attribute_universe)
-            nf = _highest_normal_form(fdset)
+            if fdset.isBCNF():
+                nf = "BCNF"
+            elif fdset.is3NF():
+                nf = "3NF"
+            elif fdset.is2NF():
+                nf = "2NF"
+            else:
+                nf = "below_2NF"
             counts[nf] += 1
             counts["fd_sets_processed"] += 1
 
@@ -99,14 +92,9 @@ def _analyze_file_group(file_paths, attribute_universe):
 
 
 def analyze_sample_files_normal_forms(files):
-    """
-    Read every sample_*.json file, group by sample type (stripping trailing _<N>),
-    classify each FD set by highest normal form, and write one JSON per group.
-    """
     if not files:
-        raise ValueError("No input files provided.")
+        return
 
-    # Group files by their base type name
     groups = defaultdict(list)
     for file_path in files:
         groups[_sample_type(file_path)].append(file_path)
