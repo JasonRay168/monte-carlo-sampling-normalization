@@ -108,7 +108,7 @@ def analyze_sample_files_normal_forms(files):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "files", nargs="+", help="List of sample_*.json files to analyze"
+        "files", nargs="+"
     )
     args = parser.parse_args()
 
