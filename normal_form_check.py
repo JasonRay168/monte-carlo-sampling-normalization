@@ -29,12 +29,13 @@ def fdset_from_json_entry(fd_entry, attribute_universe):
     return fdset
 
 
-def _sample_type(file_path):
-    stem = Path(file_path).stem  # e.g. sample_table_5_size_10_set_10000_1
-    return re.sub(r"_\d+$", "", stem)  # -> sample_table_5_size_10_set_10000
+def identify_sample_type(file_path):
+    # e.g. sample_table_5_size_10_set_10000_1 -> sample_table_5_size_10_set_10000
+    stem = Path(file_path).stem
+    return re.sub(r"_\d+$", "", stem)
 
 
-def _analyze_file_group(file_paths, attribute_universe):
+def analyze_file_group(file_paths, attribute_universe):
     results = {
         "files_processed": [Path(p).name for p in file_paths],
         "per_file": {},
@@ -87,12 +88,12 @@ def analyze_sample_files_normal_forms(files):
 
     groups = defaultdict(list)
     for file_path in files:
-        groups[_sample_type(file_path)].append(file_path)
+        groups[identify_sample_type(file_path)].append(file_path)
 
     all_results = {}
     for sample_type, file_paths in sorted(groups.items()):
         attribute_universe = attribute_universe_from_filename(file_paths[0])
-        results = _analyze_file_group(file_paths, attribute_universe)
+        results = analyze_file_group(file_paths, attribute_universe)
 
         output_file = f"normal_form_counts_{sample_type}.json"
         with open(output_file, "w", encoding="utf-8") as f:
@@ -107,7 +108,7 @@ def analyze_sample_files_normal_forms(files):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "files", nargs="+", help="List of sample_*.json files to analyze"
+        "files", nargs="+"
     )
     args = parser.parse_args()
 
