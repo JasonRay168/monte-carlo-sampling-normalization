@@ -65,7 +65,6 @@ def collate(
         table_key = f"table_{num_attrs}"
         no_fds = len(tables.get(table_key, []))
 
-        # Inclusive bounds are clearer and less error-prone than range membership.
         if not (n_attrs_min <= num_attrs <= n_attrs_max):
             continue
 
@@ -130,7 +129,6 @@ def collate(
         current_1nf = int(current["1NF"]) if str(current["1NF"]).isdigit() else -1
         new_1nf = int(row["1NF"]) if str(row["1NF"]).isdigit() else -1
 
-        # Prefer the row with more processed FD sets when duplicate keys exist.
         if new_1nf > current_1nf:
             merged_rows[key] = row
 
@@ -150,36 +148,23 @@ def main() -> int:
         "-o",
         "--output",
         default="collated_results.csv",
-        help="Output CSV path (default: collated_results.csv)",
     )
     parser.add_argument(
         "-w",
         "--workspace",
         default=".",
-        help="Workspace directory containing tables.json and sample files (default: .)",
     )
     parser.add_argument(
         "--n-attrs-min",
         type=int,
         default=DEFAULT_N_ATTRS_MIN,
-        help=(
-            "Minimum number of attributes to include (inclusive; "
-            f"default: {DEFAULT_N_ATTRS_MIN})"
-        ),
     )
     parser.add_argument(
         "--n-attrs-max",
         type=int,
         default=DEFAULT_N_ATTRS_MAX,
-        help=(
-            "Maximum number of attributes to include (inclusive; "
-            f"default: {DEFAULT_N_ATTRS_MAX})"
-        ),
     )
     args = parser.parse_args()
-
-    if args.n_attrs_min > args.n_attrs_max:
-        raise ValueError("--n-attrs-min must be <= --n-attrs-max")
 
     workspace = Path(args.workspace).resolve()
     output_file = Path(args.output)
