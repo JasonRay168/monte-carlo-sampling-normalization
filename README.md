@@ -73,9 +73,6 @@ This writes `collated_results.csv` with these columns:
 `FD Density` and `Reduction Ratio` are intentionally left blank so you can fill them in with Excel formulas later.
 
 ## Trend Analysis And Graphs
-
-The workbook `CS4221 Project Results.xlsx` and `collated_results.csv` are merged into one cleaned dataset. When both contain the same `(Num Attributes, Sample Size)` pair, the workbook row is used.
-
 Generate a cleaned merged dataset and a text summary of the strongest trends:
 
 ```bash
@@ -85,9 +82,6 @@ python3 analyze_results.py
 This writes:
 
 - `analysis_results.csv`
-- `trend_report.txt`
-
-It also writes the cleaned merged rows back into `CS4221 Project Results.xlsx` on a sheet named `Archived Data` so the report data stays in the workbook alongside the original source sheet.
 
 Generate the graphs from the cleaned dataset:
 

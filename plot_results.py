@@ -8,9 +8,6 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.patches import Patch
-from matplotlib.ticker import MaxNLocator
 
 
 INPUT_CSV_PATH = Path("analysis_results.csv")
@@ -33,7 +30,7 @@ NF_LABELS = {
 NF_KEYS = ["below_2nf_rate", "2nf_rate", "3nf_rate", "bcnf_rate"]
 
 
-def load_rows(path: Path):
+def load_rows(path):
     rows = []
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -66,17 +63,17 @@ def _group_by_attr(rows):
     return groups
 
 
-def ensure_dir(path: Path) -> None:
+def ensure_dir(path) -> None:
     path.mkdir(parents=True, exist_ok=True)
 
 
-def _save(fig, path: Path) -> None:
+def _save(fig, path) -> None:
     for ext in (".svg", ".png"):
         fig.savefig(path.with_suffix(ext), dpi=220, bbox_inches="tight")
     plt.close(fig)
 
 
-def _style(ax, title: str, x_label: str, y_label: str) -> None:
+def _style(ax, title, x_label, y_label) -> None:
     ax.set_title(title, pad=14, fontsize=15, fontweight="semibold")
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
@@ -88,7 +85,7 @@ def _style(ax, title: str, x_label: str, y_label: str) -> None:
 
 # ── Graph 1: BCNF Rate vs Number of FDs ─────────────────────────────────────
 
-def plot_bcnf_vs_num_fds(rows, out: Path):
+def plot_bcnf_vs_num_fds(rows, out):
     """The intuitive graph: at the same number of FDs, more attributes → lower BCNF."""
     groups = _group_by_attr(rows)
     fig, ax = plt.subplots(figsize=(12, 6.5))
@@ -111,7 +108,7 @@ def plot_bcnf_vs_num_fds(rows, out: Path):
 
 # ── Graph 2: NF Distribution at Fixed FD Count ──────────────────────────────
 
-def plot_nf_at_fixed_fds(rows, out: Path):
+def plot_nf_at_fixed_fds(rows, out):
     """Stacked bars at fixed sample sizes, comparing across attribute counts."""
     target_sizes = [1, 20]
     groups = _group_by_attr(rows)
@@ -165,7 +162,7 @@ def _find_threshold(series, target_rate):
     return None
 
 
-def plot_bcnf_threshold(rows, out: Path):
+def plot_bcnf_threshold(rows, out):
     """How many FDs are needed to reach 50% and 90% BCNF?"""
     groups = _group_by_attr(rows)
     fig, ax = plt.subplots(figsize=(10, 6.5))
@@ -200,7 +197,7 @@ def plot_bcnf_threshold(rows, out: Path):
 
 # ── Graph 4: Reduction Ratio vs Number of FDs ───────────────────────────────
 
-def plot_reduction_ratio(rows, out: Path):
+def plot_reduction_ratio(rows, out):
     """Minimal cover size / sample size — shows FD redundancy scaling."""
     groups = _group_by_attr(rows)
     fig, ax = plt.subplots(figsize=(12, 6.5))
@@ -224,7 +221,7 @@ def plot_reduction_ratio(rows, out: Path):
 
 # ── Graph 5: Minimal Cover Size vs Number of FDs ────────────────────────────
 
-def plot_cover_size(rows, out: Path):
+def plot_cover_size(rows, out):
     """Absolute minimal cover size growth."""
     groups = _group_by_attr(rows)
     fig, ax = plt.subplots(figsize=(12, 6.5))

@@ -9,7 +9,7 @@ from tqdm import tqdm
 from dbis_functional_dependencies import fdcheck
 
 
-def _attribute_universe_from_filename(file_path):
+def attribute_universe_from_filename(file_path):
     match = re.search(r"table_(\d+)", Path(file_path).name)
     if not match:
         return
@@ -18,7 +18,7 @@ def _attribute_universe_from_filename(file_path):
     return "".join(str(i) for i in range(num_attrs))
 
 
-def _fdset_from_json_entry(fd_entry, attribute_universe):
+def fdset_from_json_entry(fd_entry, attribute_universe):
     fdset = fdcheck.FunctionalDependencySet(attribute_universe)
 
     for lhs, rhs in fd_entry:
@@ -27,16 +27,6 @@ def _fdset_from_json_entry(fd_entry, attribute_universe):
         fdset.add_dependency(lhs_str, rhs_str)
 
     return fdset
-
-
-def _highest_normal_form(fdset):
-    if fdset.isBCNF():
-        return "BCNF"
-    if fdset.is3NF():
-        return "3NF"
-    if fdset.is2NF():
-        return "2NF"
-    return "below_2NF"
 
 
 def _sample_type(file_path):
@@ -64,7 +54,7 @@ def _analyze_file_group(file_paths, attribute_universe):
         counts = defaultdict(int)
         file_name = Path(file_path).name
         for fd_entry in tqdm(fd_sets, desc=f"Analysing {file_name}", unit="set"):
-            fdset = _fdset_from_json_entry(fd_entry, attribute_universe)
+            fdset = fdset_from_json_entry(fd_entry, attribute_universe)
             if fdset.isBCNF():
                 nf = "BCNF"
             elif fdset.is3NF():
@@ -101,7 +91,7 @@ def analyze_sample_files_normal_forms(files):
 
     all_results = {}
     for sample_type, file_paths in sorted(groups.items()):
-        attribute_universe = _attribute_universe_from_filename(file_paths[0])
+        attribute_universe = attribute_universe_from_filename(file_paths[0])
         results = _analyze_file_group(file_paths, attribute_universe)
 
         output_file = f"normal_form_counts_{sample_type}.json"

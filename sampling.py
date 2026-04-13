@@ -4,7 +4,6 @@ import json
 import os
 import time
 from tqdm import tqdm
-from generate import generate_table
 from functional_dependencies import *
 
 
@@ -93,7 +92,8 @@ def create_samples_fix_size(
         f"sample_table_{table_name}_size_{sample_size}_set_{num_samples}_{set_num}.json"
     )
     if set_index is not None and total_sets is not None:
-        print(f"Writing size {sample_size} set {set_index}/{total_sets} to {filename}")
+        print(
+            f"Writing size {sample_size} set {set_index}/{total_sets} to {filename}")
     else:
         print(f"Writing size {sample_size} to {filename}")
 
@@ -144,31 +144,27 @@ if __name__ == "__main__":
         exit(1)
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("table", type=int, help="Table number e.g. 7 for table_7")
+    parser.add_argument("table", type=int)
     parser.add_argument(
         "--num-fds",
         type=int,
         nargs="+",
-        default=None,
-        help="One or more FD sample sizes (default: run 20, 40, and 60)",
+        default=None
     )
     parser.add_argument(
         "--seed",
         type=int,
-        default=None,
-        help="Optional random seed for reproducible sampling",
+        default=None
     )
     parser.add_argument(
         "--num-samples",
         type=int,
-        default=10000,
-        help="Number of sampled FD sets per generated JSON file (default: 10000)",
+        default=10000
     )
     parser.add_argument(
         "--num-sets",
         type=int,
-        default=3,
-        help="Number of JSON files to generate for each sample size (default: 3)",
+        default=3
     )
     args = parser.parse_args()
 
