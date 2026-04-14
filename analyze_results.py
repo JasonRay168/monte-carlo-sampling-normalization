@@ -1,96 +1,120 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+import csv
 
-from results_dataset import (
-    group_by_attr,
-    load_all_rows,
-    write_archived_workbook,
-    write_cleaned_csv,
-)
+REPO_COLLATED_PATH = Path("collated_results.csv")
+
+
+def _as_float(value):
+    return float(value) if value not in ("", None) else 0.0
+
+
+def _rate(numerator, denominator):
+    return numerator / denominator if denominator else 0.0
+
+
+def _normalize_row(
+    sample_size,
+    num_attributes,
+    num_fds,
+    minimal_cover_size,
+    total_fd_sets,
+    count_2nf,
+    count_3nf,
+    count_bcnf,
+):
+    below_2nf = max(total_fd_sets - count_2nf - count_3nf - count_bcnf, 0.0)
+    return {
+        "sample_size": int(round(sample_size)),
+        "num_attributes": int(round(num_attributes)),
+        "num_fds": int(round(num_fds)),
+        "fd_density": _rate(sample_size, num_fds),
+        "minimal_cover_size": minimal_cover_size,
+        "reduction_ratio": _rate(minimal_cover_size, num_fds),
+        "total_fd_sets": int(round(total_fd_sets)),
+        "below_2nf_count": int(round(below_2nf)),
+        "2nf_count": int(round(count_2nf)),
+        "3nf_count": int(round(count_3nf)),
+        "bcnf_count": int(round(count_bcnf)),
+        "below_2nf_rate": _rate(below_2nf, total_fd_sets),
+        "2nf_rate": _rate(count_2nf, total_fd_sets),
+        "3nf_rate": _rate(count_3nf, total_fd_sets),
+        "bcnf_rate": _rate(count_bcnf, total_fd_sets),
+    }
+
+
+def load_repo_collated_rows(
+    path=REPO_COLLATED_PATH,
+):
+    records = []
+    if not path.exists():
+        return records
+
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        for row in reader:
+            if any(row[key] in ("", None) for key in ("1NF", "2NF", "3NF", "BCNF")):
+                continue
+
+            records.append(
+                _normalize_row(
+                    sample_size=_as_float(row["Sample Size"]),
+                    num_attributes=_as_float(row["Num Attributes"]),
+                    num_fds=_as_float(row["No. Fds"]),
+                    minimal_cover_size=_as_float(row["Minimal Cover Size"]),
+                    total_fd_sets=_as_float(row["1NF"]),
+                    count_2nf=_as_float(row["2NF"]),
+                    count_3nf=_as_float(row["3NF"]),
+                    count_bcnf=_as_float(row["BCNF"]),
+                )
+            )
+
+    return records
+
+
+def load_all_rows():
+    merged = {}
+
+    for row in load_repo_collated_rows():
+        merged[(row["num_attributes"], row["sample_size"])] = row
+
+    return sorted(
+        merged.values(), key=lambda row: (row["num_attributes"], row["sample_size"])
+    )
+
+
+def write_cleaned_csv(rows, path) -> None:
+    fieldnames = [
+        "sample_size",
+        "num_attributes",
+        "num_fds",
+        "fd_density",
+        "minimal_cover_size",
+        "reduction_ratio",
+        "total_fd_sets",
+        "below_2nf_count",
+        "2nf_count",
+        "3nf_count",
+        "bcnf_count",
+        "below_2nf_rate",
+        "2nf_rate",
+        "3nf_rate",
+        "bcnf_rate",
+    ]
+
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 CLEANED_CSV_PATH = Path("analysis_results.csv")
-REPORT_PATH = Path("trend_report.txt")
 MIN_NUM_ATTRIBUTES = 4
 MAX_NUM_ATTRIBUTES = 8
 
 
-def _fmt_percent(value: float) -> str:
-    return f"{value * 100:.2f}%"
-
-
-def _fmt_float(value: float) -> str:
-    return f"{value:.6f}"
-
-
-def build_report(rows):
-    lines = []
-
-    size_20_rows = sorted(
-        [row for row in rows if row["sample_size"] == 20],
-        key=lambda row: row["num_attributes"],
-    )
-
-    if size_20_rows:
-        first = size_20_rows[0]
-        last = size_20_rows[-1]
-        lines.append("Trend 1: Attribute growth at fixed sample size 20")
-        lines.append(
-            f"- Minimal cover size rises from {_fmt_float(first['minimal_cover_size'])} at {first['num_attributes']} attributes "
-            f"to {_fmt_float(last['minimal_cover_size'])} at {last['num_attributes']} attributes."
-        )
-        lines.append(
-            f"- Reduction ratio (minimal cover size / num FDs) falls from {_fmt_float(first['reduction_ratio'])} "
-            f"to {_fmt_float(last['reduction_ratio'])}, a {first['reduction_ratio'] / last['reduction_ratio']:.1f}x drop."
-        )
-        bcnf_collapse_row = next(
-            (row for row in size_20_rows if row["bcnf_rate"] == 0.0),
-            None,
-        )
-        if bcnf_collapse_row:
-            lines.append(
-                f"- BCNF rate falls from {_fmt_percent(first['bcnf_rate'])} to 0 by {bcnf_collapse_row['num_attributes']} attributes."
-            )
-        lines.append(
-            f"- 3NF rate climbs from {_fmt_percent(first['3nf_rate'])} to {_fmt_percent(last['3nf_rate'])}."
-        )
-        lines.append("")
-
-    groups = group_by_attr(rows)
-    dense_groups = sorted(
-        [
-            [row for row in series if row["fd_density"] <= 1.0]
-            for _, series in groups.items()
-            if len([row for row in series if row["fd_density"] <= 1.0]) >= 2
-        ],
-        key=lambda series: series[0]["num_attributes"],
-    )
-
-    for series in dense_groups:
-        start = series[0]
-        end = series[-1]
-        lines.append(
-            f"Trend 2: Density sweep for attribute count {start['num_attributes']}"
-        )
-        lines.append(
-            f"- FD density increases from {_fmt_float(start['fd_density'])} to {_fmt_float(end['fd_density'])}."
-        )
-        lines.append(
-            f"- BCNF rate changes from {_fmt_percent(start['bcnf_rate'])} to {_fmt_percent(end['bcnf_rate'])}."
-        )
-        lines.append(
-            f"- 3NF rate changes from {_fmt_percent(start['3nf_rate'])} to {_fmt_percent(end['3nf_rate'])}."
-        )
-        lines.append(
-            f"- Reduction ratio changes from {_fmt_float(start['reduction_ratio'])} to {_fmt_float(end['reduction_ratio'])}."
-        )
-        lines.append("")
-
-    return "\n".join(lines).strip() + "\n"
-
-
-def main() -> int:
+def main():
     rows = [
         row
         for row in load_all_rows()
@@ -98,15 +122,10 @@ def main() -> int:
         and MIN_NUM_ATTRIBUTES <= row["num_attributes"] <= MAX_NUM_ATTRIBUTES
     ]
     if not rows:
-        raise SystemExit("No rows found in the hardcoded workbook/CSV sources.")
+        return 1
 
     write_cleaned_csv(rows, CLEANED_CSV_PATH)
-    write_archived_workbook(rows)
-    report = build_report(rows)
-    REPORT_PATH.write_text(report, encoding="utf-8")
-    print(report, end="")
     print(f"Written cleaned dataset: {CLEANED_CSV_PATH.resolve()}")
-    print(f"Written trend report: {REPORT_PATH.resolve()}")
     return 0
 
 

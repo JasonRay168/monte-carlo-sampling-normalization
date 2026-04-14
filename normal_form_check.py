@@ -9,7 +9,7 @@ from tqdm import tqdm
 from dbis_functional_dependencies import fdcheck
 
 
-def _attribute_universe_from_filename(file_path):
+def attribute_universe_from_filename(file_path):
     match = re.search(r"table_(\d+)", Path(file_path).name)
     if not match:
         return
@@ -18,7 +18,7 @@ def _attribute_universe_from_filename(file_path):
     return "".join(str(i) for i in range(num_attrs))
 
 
-def _fdset_from_json_entry(fd_entry, attribute_universe):
+def fdset_from_json_entry(fd_entry, attribute_universe):
     fdset = fdcheck.FunctionalDependencySet(attribute_universe)
 
     for lhs, rhs in fd_entry:
@@ -29,22 +29,13 @@ def _fdset_from_json_entry(fd_entry, attribute_universe):
     return fdset
 
 
-def _highest_normal_form(fdset):
-    if fdset.isBCNF():
-        return "BCNF"
-    if fdset.is3NF():
-        return "3NF"
-    if fdset.is2NF():
-        return "2NF"
-    return "below_2NF"
+def identify_sample_type(file_path):
+    # e.g. sample_table_5_size_10_set_10000_1 -> sample_table_5_size_10_set_10000
+    stem = Path(file_path).stem
+    return re.sub(r"_\d+$", "", stem)
 
 
-def _sample_type(file_path):
-    stem = Path(file_path).stem  # e.g. sample_table_5_size_10_set_10000_1
-    return re.sub(r"_\d+$", "", stem)  # -> sample_table_5_size_10_set_10000
-
-
-def _analyze_file_group(file_paths, attribute_universe):
+def analyze_file_group(file_paths, attribute_universe):
     results = {
         "files_processed": [Path(p).name for p in file_paths],
         "per_file": {},
@@ -64,7 +55,7 @@ def _analyze_file_group(file_paths, attribute_universe):
         counts = defaultdict(int)
         file_name = Path(file_path).name
         for fd_entry in tqdm(fd_sets, desc=f"Analysing {file_name}", unit="set"):
-            fdset = _fdset_from_json_entry(fd_entry, attribute_universe)
+            fdset = fdset_from_json_entry(fd_entry, attribute_universe)
             if fdset.isBCNF():
                 nf = "BCNF"
             elif fdset.is3NF():
@@ -97,12 +88,12 @@ def analyze_sample_files_normal_forms(files):
 
     groups = defaultdict(list)
     for file_path in files:
-        groups[_sample_type(file_path)].append(file_path)
+        groups[identify_sample_type(file_path)].append(file_path)
 
     all_results = {}
     for sample_type, file_paths in sorted(groups.items()):
-        attribute_universe = _attribute_universe_from_filename(file_paths[0])
-        results = _analyze_file_group(file_paths, attribute_universe)
+        attribute_universe = attribute_universe_from_filename(file_paths[0])
+        results = analyze_file_group(file_paths, attribute_universe)
 
         output_file = f"normal_form_counts_{sample_type}.json"
         with open(output_file, "w", encoding="utf-8") as f:
@@ -117,7 +108,7 @@ def analyze_sample_files_normal_forms(files):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "files", nargs="+", help="List of sample_*.json files to analyze"
+        "files", nargs="+"
     )
     args = parser.parse_args()
 
